@@ -123,7 +123,10 @@ app.get('/favoritos/usuario/:id_usuario', (req, res) => {
 
     res.status(200).json(detalhesFilmes);
 });
-
+// rota para a pagina inicial nao ficar vazia
+app.get('/', (req, res) => {
+    res.send('bem-vindo ao cinestream! use /filmes ou /usuarios para navegar.');
+});
 // --- so pra rodar o servidor ---
 const PORT = 3000;
 app.listen(PORT, () => {
