@@ -1,1 +1,18 @@
+# pastas de dependências (nunca enviar)
 node_modules/
+
+# arquivos de log do npm
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# arquivos de configuração do ambiente (senhas e chaves)
+.env
+
+# arquivos do sistema operacional
+.DS_Store
+Thumbs.db
+
+# pastas de build ou pastas geradas automaticamente
+dist/
+build/
