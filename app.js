@@ -3,24 +3,24 @@ const app = express();
 
 app.use(express.json());
 
-// Simulando as tabelas do SQL em Arrays
+// fingindo que isso aqui são as tabelas do sql
 let filmes = [];
 let usuarios = [];
 let favoritos = [];
 
-// --- GESTÃO DE FILMES ---
+// --- parte dos filmes ---
 
-// Listar todos os filmes
+// pega a lista completa de filmes
 app.get('/filmes', (req, res) => {
     res.status(200).json(filmes);
 });
 
-// Cadastrar novo filme
+// cria um filme novo no catalogo
 app.post('/filmes', (req, res) => {
     const { titulo, genero, ano_lancamento } = req.body;
     
     if (!titulo || !genero || !ano_lancamento) {
-        return res.status(400).json({ erro: "Todos os campos são obrigatórios" });
+        return res.status(400).json({ erro: "precisa preencher tudo aí" });
     }
 
     const novoFilme = { 
@@ -33,29 +33,29 @@ app.post('/filmes', (req, res) => {
     res.status(201).json(novoFilme);
 });
 
-// Remover filme
+// apaga um filme pelo id
 app.delete('/filmes/:id', (req, res) => {
     const { id } = req.params;
     const existe = filmes.find(f => f.id == id);
-    if (!existe) return res.status(404).json({ erro: "Filme não encontrado" });
+    if (!existe) return res.status(404).json({ erro: "filme nem existe" });
 
     filmes = filmes.filter(f => f.id != id);
-    res.status(200).json({ mensagem: "Filme removido com sucesso" });
+    res.status(200).json({ mensagem: "apagado com sucesso" });
 });
 
-// --- GESTÃO DE USUÁRIOS ---
+// --- parte dos usuarios ---
 
-// Listar todos os usuários
+// mostra todo mundo que tá cadastrado
 app.get('/usuarios', (req, res) => {
     res.status(200).json(usuarios);
 });
 
-// Cadastrar usuário
+// cadastra usuario novo
 app.post('/usuarios', (req, res) => {
     const { nome, email, plano } = req.body;
 
     if (!nome || !email || !plano) {
-        return res.status(400).json({ erro: "Nome, email e plano são obrigatórios" });
+        return res.status(400).json({ erro: "nome, email e plano sao obrigatorios" });
     }
 
     const novoUsuario = { 
@@ -68,13 +68,13 @@ app.post('/usuarios', (req, res) => {
     res.status(201).json(novoUsuario);
 });
 
-// Atualizar usuário
+// edita os dados de alguem
 app.put('/usuarios/:id', (req, res) => {
     const { id } = req.params;
     const { nome, email, plano } = req.body;
     
     const usuario = usuarios.find(u => u.id == id);
-    if (!usuario) return res.status(404).json({ erro: "Usuário não encontrado" });
+    if (!usuario) return res.status(404).json({ erro: "usuario nao encontrado" });
 
     if (nome) usuario.nome = nome;
     if (email) usuario.email = email;
@@ -83,9 +83,9 @@ app.put('/usuarios/:id', (req, res) => {
     res.status(200).json(usuario);
 });
 
-// --- SISTEMA DE FAVORITOS ---
+// --- parte dos favoritos ---
 
-// Adicionar aos favoritos
+// adiciona um filme na lista de alguem
 app.post('/favoritos', (req, res) => {
     const { id_usuario, id_filme } = req.body;
 
@@ -93,7 +93,7 @@ app.post('/favoritos', (req, res) => {
     const filmeExiste = filmes.find(f => f.id == id_filme);
 
     if (!usuarioExiste || !filmeExiste) {
-        return res.status(404).json({ erro: "Usuário ou Filme não encontrado" });
+        return res.status(404).json({ erro: "da pra favoritar nao, id errado" });
     }
 
     const novoFavorito = { 
@@ -105,18 +105,18 @@ app.post('/favoritos', (req, res) => {
     res.status(201).json(novoFavorito);
 });
 
-// Listar todos os relacionamentos de favoritos
+// ver todos os favoritos do sistema
 app.get('/favoritos', (req, res) => {
     res.status(200).json(favoritos);
 });
 
-// Listar filmes favoritos de um usuário específico
+// busca só os favoritos de um usuario especifico
 app.get('/favoritos/usuario/:id_usuario', (req, res) => {
     const { id_usuario } = req.params;
     
     const listaFavoritos = favoritos.filter(fav => fav.id_usuario == id_usuario);
     
-    // Retorna os dados dos filmes, filtrando caso o filme tenha sido deletado do catálogo
+    // aqui ele retorna os filmes e ignora se o filme foi deletado
     const detalhesFilmes = listaFavoritos
         .map(fav => filmes.find(f => f.id == fav.id_filme))
         .filter(f => f !== undefined); 
@@ -124,8 +124,8 @@ app.get('/favoritos/usuario/:id_usuario', (req, res) => {
     res.status(200).json(detalhesFilmes);
 });
 
-// --- INICIALIZAÇÃO ---
+// --- so pra rodar o servidor ---
 const PORT = 3000;
 app.listen(PORT, () => {
-    console.log(`CineStream rodando em http://localhost:${PORT}`);
+    console.log(`cinestream rodando na porta ${PORT}`);
 });
